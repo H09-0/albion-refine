@@ -13,7 +13,15 @@ const RESOURCE_LABELS = {
   hide: 'Hide → Leather',
   stone: 'Stone → Stone Blocks',
 };
-const TIER_RATIOS = { 2: [2, 3], 3: [2, 2], 4: [3, 2], 5: [3, 2], 6: [4, 2], 7: [4, 2], 8: [5, 2] };
+const RECIPES = {
+  2: { raw: 2, filler: 0, refined: 3 },
+  3: { raw: 2, filler: 1, refined: 2 },
+  4: { raw: 3, filler: 1, refined: 2 },
+  5: { raw: 3, filler: 1, refined: 2 },
+  6: { raw: 4, filler: 1, refined: 2 },
+  7: { raw: 4, filler: 1, refined: 2 },
+  8: { raw: 5, filler: 1, refined: 2 },
+};
 const BASE_FOCUS_COST = {
   4: [54, 94, 164, 287, 503],
   5: [94, 164, 287, 503, 880],
@@ -35,6 +43,9 @@ const stationFee = $('stationFee');
 const specLevel = $('specLevel');
 const rawPrice = $('rawPrice');
 const refinedPrice = $('refinedPrice');
+const fillerPrice = $('fillerPrice');
+const fillerGroup = $('fillerGroup');
+const fillerLabel = $('fillerLabel');
 
 // ---- City bonus logic ----
 function updateBonus() {
@@ -79,34 +90,39 @@ function calc() {
 
   const rrr = fullRrr; // Use full for profit calculations
 
-  // Ratio
-  const ratio = TIER_RATIOS[tier] || [3, 2];
-  const rawPerCraft = ratio[0];
-  const refPerCraft = ratio[1];
+  // Recipe
+  const recipe = RECIPES[tier] || RECIPES[4];
+  const rawPerCraft = recipe.raw;
+  const fillerPerCraft = recipe.filler;
+  const refPerCraft = recipe.refined;
   const returnedRaw = rawPerCraft * rrr;
   const netRaw = rawPerCraft - returnedRaw;
+  const returnedFiller = fillerPerCraft * rrr;
+  const netFiller = fillerPerCraft - returnedFiller;
 
   // Focus cost
   const costs = BASE_FOCUS_COST[tier] || BASE_FOCUS_COST[4];
   const baseFocus = costs[ench] || costs[0];
-  const focusMult = 1 - (spec / 40000) * 0.9375;
+  const focusMult = Math.pow(0.5, spec / 10000);
   const actualFocus = Math.round(baseFocus * Math.max(focusMult, 0.0625));
 
   // Prices
-  const materialCost = raw ? netRaw * raw : null;
+  const filler = parseFloat(fillerPrice.value);
+  const materialCost = raw ? netRaw * raw + (filler && netFiller ? netFiller * filler : 0) : null;
   const revenue = ref ? refPerCraft * ref : null;
   const stationTotal = (materialCost && fee) ? materialCost * (fee / 100) : 0;
   const profit = (materialCost !== null && revenue !== null) ? revenue - materialCost - stationTotal : null;
-  const spf = (profit !== null && profit !== 0 && actualFocus > 0 && useFocus)
-    ? (profit - calcProfitNoFocus(res, tier, ench, city, daily, fee, raw, ref)) / actualFocus
+  const spf = (profit !== null && actualFocus > 0 && useFocus)
+    ? (profit - calcProfitNoFocus(res, tier, ench, city, daily, fee, raw, ref, filler)) / actualFocus
     : null;
-  const dailyProfit = (spf !== null && spf > 0) ? spf * 10000 : null;
+  const dailyProfit = spf !== null ? spf * 10000 : null;
 
   // Display
   $('baseRrrResult').textContent = baseRrrPct + '%';
   $('focusRrrResult').textContent = useFocus ? fullRrrPct + '%' : '— (focus off)';
   $('bonusResult').textContent = '+' + fullBonus + '%';
   $('costResult').textContent = materialCost !== null ? materialCost.toFixed(0) + ' s' : '—';
+  $('fillerCostResult').textContent = (filler && netFiller) ? (netFiller * filler).toFixed(0) + ' s' : '—';
   $('revenueResult').textContent = revenue !== null ? revenue.toFixed(0) + ' s' : '—';
 
   const profitEl = $('profitResult');
@@ -132,6 +148,7 @@ function calc() {
     ...(useFocus ? [{ label: 'Focus adds', value: '+59%' }] : []),
     ...(useFocus ? [{ label: 'Return rate (with focus)', value: fullRrrPct + '%', bold: true }] : []),
     { label: 'Raw per craft', value: rawPerCraft + ' → ' + netRaw.toFixed(1) + ' (after return)' },
+    ...(fillerPerCraft > 0 ? [{ label: 'Filler per craft', value: fillerPerCraft + ' → ' + netFiller.toFixed(2) + ' (after return)' }] : []),
     { label: 'Refined per craft', value: refPerCraft + ' units' },
   ];
   $('breakdownLines').innerHTML = lines.map(l =>
@@ -156,16 +173,17 @@ function calc() {
   }
 }
 
-function calcProfitNoFocus(res, tier, ench, city, daily, fee, raw, ref) {
+function calcProfitNoFocus(res, tier, ench, city, daily, fee, raw, ref, filler) {
   let pb = 18;
   if (BONUS_CITIES[res] === city) pb += 40;
   pb += daily;
   const rrr = pb / (100 + pb);
-  const ratio = TIER_RATIOS[tier] || [3, 2];
-  const netRaw = ratio[0] * (1 - rrr);
+  const recipe = RECIPES[tier] || RECIPES[4];
+  const netRaw = recipe.raw * (1 - rrr);
+  const netFiller = recipe.filler * (1 - rrr);
   if (!raw || !ref) return 0;
-  const matCost = netRaw * raw;
-  const rev = ratio[1] * ref;
+  const matCost = netRaw * raw + (filler && netFiller ? netFiller * filler : 0);
+  const rev = recipe.refined * ref;
   const station = matCost * (fee / 100);
   return rev - matCost - station;
 }
@@ -182,10 +200,12 @@ function getItemIds(res, tier, ench) {
     stone: { raw: 'ROCK', refined: 'STONEBLOCK' },
   };
   const m = map[res];
+  const enc = ench > 0 ? `_LEVEL${ench}@${ench}` : '';
+  const prevTier = Math.max(1, parseInt(tier) - 1);
   return {
     raw: `T${tier}_${m.raw}${ench > 0 ? `@${ench}` : ''}`,
-    refined: `T${tier}_${m.raw}_LEVEL1${ench > 0 ? `@${ench}` : ''}@1`,
-    // For refined, AODP uses LEVEL1 suffix for refined materials at enchant level
+    refined: `T${tier}_${m.refined}${enc}`,
+    filler: prevTier >= 2 ? `T${prevTier}_${m.refined}${enc}` : null,
   };
 }
 
@@ -225,14 +245,43 @@ async function fetchRefinedPrice() {
   calc();
 }
 
+async function fetchFillerPrice() {
+  const res = resourceEl.value;
+  const tier = tierEl.value;
+  const ench = enchantEl.value;
+  const city = cityEl.value;
+  const ids = getItemIds(res, tier, ench);
+  if (!ids.filler) { alert('No filler needed for this tier.'); return; }
+  const price = await fetchPrice(ids.filler, city);
+  if (price !== null) fillerPrice.value = price;
+  else alert('Could not fetch filler price. Try manually.');
+  calc();
+}
+
 $('fetchRawPrice').addEventListener('click', fetchRawPrice);
 $('fetchRefinedPrice').addEventListener('click', fetchRefinedPrice);
+$('fetchFillerPrice').addEventListener('click', fetchFillerPrice);
+
+function updateFiller() {
+  const tier = parseInt(tierEl.value);
+  const res = resourceEl.value;
+  const prevTier = tier - 1;
+  const hasFiller = tier > 2;
+  fillerGroup.style.display = hasFiller ? '' : 'none';
+  if (hasFiller) {
+    const label = RESOURCE_LABELS[res].split('→')[0].trim();
+    fillerLabel.textContent = `Filler Price (T${prevTier} ${label} refined)`;
+  }
+}
+resourceEl.addEventListener('change', updateFiller);
+tierEl.addEventListener('change', updateFiller);
 
 // ---- Event listeners ----
-[resourceEl, tierEl, enchantEl, cityEl, focusToggle, dailyBonus, stationFee, specLevel, rawPrice, refinedPrice]
+[resourceEl, tierEl, enchantEl, cityEl, focusToggle, dailyBonus, stationFee, specLevel, rawPrice, refinedPrice, fillerPrice]
   .forEach(el => el.addEventListener('change', calc));
 rawPrice.addEventListener('input', calc);
 refinedPrice.addEventListener('input', calc);
+fillerPrice.addEventListener('input', calc);
 
 // ---- Reference tabs ----
 document.querySelectorAll('.ref-tab').forEach(tab => {
@@ -258,4 +307,5 @@ document.querySelector('.hamburger').addEventListener('click', () => {
 
 // ---- Init ----
 updateBonus();
+updateFiller();
 calc();

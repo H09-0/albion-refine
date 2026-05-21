@@ -140,6 +140,13 @@
             <button id="fetchRefinedPrice" class="btn btn-sm">Fetch</button>
           </div>
         </div>
+        <div class="form-group" id="fillerGroup">
+          <label for="fillerPrice" id="fillerLabel">Filler Price (T3 refined)</label>
+          <div class="input-with-btn">
+            <input type="number" id="fillerPrice" placeholder="e.g. 40" step="1">
+            <button id="fetchFillerPrice" class="btn btn-sm">Fetch</button>
+          </div>
+        </div>
         <p class="help-text">Prices are per individual unit. If you leave these empty, the calculator shows return rate only.</p>
       </details>
     </div>
@@ -162,6 +169,10 @@
         <div class="result-item">
           <span class="result-label">Material Cost (per craft)</span>
           <span id="costResult" class="result-value">—</span>
+        </div>
+        <div class="result-item">
+          <span class="result-label">Filler Cost</span>
+          <span id="fillerCostResult" class="result-value">—</span>
         </div>
         <div class="result-item">
           <span class="result-label">Sell Revenue (per craft)</span>
@@ -278,13 +289,13 @@
   <div class="ref-panel" id="panel-focus">
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Tier</th><th>.0</th><th>.1</th><th>.2</th><th>.3</th></tr></thead>
+        <thead><tr><th>Tier</th><th>.0</th><th>.1</th><th>.2</th><th>.3</th><th>.4</th></tr></thead>
         <tbody>
-          <tr><td>T4</td><td>54</td><td>94</td><td>164</td><td>287</td></tr>
-          <tr><td>T5</td><td>94</td><td>164</td><td>287</td><td>503</td></tr>
-          <tr><td>T6</td><td>164</td><td>287</td><td>503</td><td>880</td></tr>
-          <tr><td>T7</td><td>287</td><td>503</td><td>880</td><td>1,539</td></tr>
-          <tr><td>T8</td><td>503</td><td>880</td><td>1,539</td><td>2,694</td></tr>
+          <tr><td>T4</td><td>54</td><td>94</td><td>164</td><td>287</td><td>503</td></tr>
+          <tr><td>T5</td><td>94</td><td>164</td><td>287</td><td>503</td><td>880</td></tr>
+          <tr><td>T6</td><td>164</td><td>287</td><td>503</td><td>880</td><td>1,539</td></tr>
+          <tr><td>T7</td><td>287</td><td>503</td><td>880</td><td>1,539</td><td>2,694</td></tr>
+          <tr><td>T8</td><td>503</td><td>880</td><td>1,539</td><td>2,694</td><td>4,714</td></tr>
         </tbody>
       </table>
       <p class="help-text">Base focus cost at 0 spec. Max spec (40k) reduces to 6.25%.</p>
@@ -294,15 +305,15 @@
   <div class="ref-panel" id="panel-ratios">
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Tier</th><th>Raw → Refined</th><th>Ratio</th></tr></thead>
+        <thead><tr><th>Tier</th><th>Raw → Refined</th><th>Filler</th><th>Ratio</th></tr></thead>
         <tbody>
-          <tr><td>T2</td><td>2 → 3</td><td>0.67:1</td></tr>
-          <tr><td>T3</td><td>2 → 2</td><td>1:1</td></tr>
-          <tr><td>T4</td><td>3 → 2</td><td>1.5:1</td></tr>
-          <tr><td>T5</td><td>3 → 2</td><td>1.5:1</td></tr>
-          <tr><td>T6</td><td>4 → 2</td><td>2:1</td></tr>
-          <tr><td>T7</td><td>4 → 2</td><td>2:1</td></tr>
-          <tr><td>T8</td><td>5 → 2</td><td>2.5:1</td></tr>
+          <tr><td>T2</td><td>2 → 3</td><td>None</td><td>0.67:1</td></tr>
+          <tr><td>T3</td><td>2 → 2</td><td>1 × T2 refined</td><td>1:1</td></tr>
+          <tr><td>T4</td><td>3 → 2</td><td>1 × T3 refined</td><td>1.5:1</td></tr>
+          <tr><td>T5</td><td>3 → 2</td><td>1 × T4 refined</td><td>1.5:1</td></tr>
+          <tr><td>T6</td><td>4 → 2</td><td>1 × T5 refined</td><td>2:1</td></tr>
+          <tr><td>T7</td><td>4 → 2</td><td>1 × T6 refined</td><td>2:1</td></tr>
+          <tr><td>T8</td><td>5 → 2</td><td>1 × T7 refined</td><td>2.5:1</td></tr>
         </tbody>
       </table>
     </div>
