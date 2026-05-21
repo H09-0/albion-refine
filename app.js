@@ -121,7 +121,7 @@ function calc() {
     ...(useFocus ? [{ label: 'Focus bonus', value: '+59%' }] : []),
     ...(daily > 0 ? [{ label: 'Daily bonus', value: '+' + daily + '%' }] : []),
     { label: 'Total production bonus', value: '+' + bonus + '%', bold: true },
-    { label: 'RRR', value: rrrPct + '%', bold: true },
+    { label: 'Return rate', value: rrrPct + '%', bold: true },
     { label: 'Raw per craft', value: rawPerCraft + ' → ' + netRaw.toFixed(1) + ' (after return)' },
     { label: 'Refined per craft', value: refPerCraft + ' units' },
   ];

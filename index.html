@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Albion Refine — Refining Calculator & Guide for Albion Online</title>
-<meta name="description" content="Albion Online refining profit calculator with RRR, focus, city bonuses, and live market prices. Plus guides and reference tables for all 5 refining disciplines.">
+<meta name="description" content="Albion Online refining profit calculator with return rate, focus, city bonuses, and live market prices. Plus guides and reference tables for all 5 refining disciplines.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚒️</text></svg>">
 <link rel="stylesheet" href="style.css">
 </head>
@@ -26,7 +26,7 @@
 <section class="hero">
   <div class="hero-content">
     <h1>Refining in Albion Online</h1>
-    <p>Calculate profits, optimize focus usage, and master the refining economy with accurate RRR mechanics and live market prices.</p>
+    <p>Calculate profits, optimize focus usage, and master the refining economy with accurate return rate mechanics and live market prices.</p>
     <div class="hero-cta">
       <a href="#calculator" class="btn btn-primary">Try the Calculator</a>
       <a href="#guides" class="btn btn-secondary">Read the Guides</a>
@@ -37,7 +37,7 @@
 <section id="calculator" class="section">
   <div class="section-header">
     <h2>Refining Profit Calculator</h2>
-    <p>Select your resource, location, and prices to calculate profit with accurate RRR.</p>
+    <p>Select your resource, location, and prices to calculate profit with accurate return rate.</p>
   </div>
   <div class="calc-layout">
     <div class="calc-inputs card">
@@ -78,15 +78,15 @@
       </div>
 
       <div class="form-group">
-        <label for="city">City</label>
+        <label for="city">City (bonus shown per selected resource)</label>
         <select id="city">
-          <option value="FortSterling">Fort Sterling</option>
-          <option value="Thetford">Thetford</option>
-          <option value="Lymhurst">Lymhurst</option>
-          <option value="Martlock">Martlock</option>
-          <option value="Bridgewatch">Bridgewatch</option>
-          <option value="Caerleon">Caerleon</option>
-          <option value="Brecilien">Brecilien</option>
+          <option value="FortSterling">Fort Sterling  (+40% Wood)</option>
+          <option value="Thetford">Thetford       (+40% Ore)</option>
+          <option value="Lymhurst">Lymhurst      (+40% Fiber)</option>
+          <option value="Martlock">Martlock       (+40% Hide)</option>
+          <option value="Bridgewatch">Bridgewatch   (+40% Stone)</option>
+          <option value="Caerleon">Caerleon       (no refining bonus)</option>
+          <option value="Brecilien">Brecilien      (no refining bonus)</option>
         </select>
         <span id="bonusIndicator" class="badge badge-bonus">+40% Bonus City</span>
       </div>
@@ -140,7 +140,7 @@
             <button id="fetchRefinedPrice" class="btn btn-sm">Fetch</button>
           </div>
         </div>
-        <p class="help-text">Prices are per individual unit. If you leave these empty, the calculator shows RRR only.</p>
+        <p class="help-text">Prices are per individual unit. If you leave these empty, the calculator shows return rate only.</p>
       </details>
     </div>
 
@@ -148,7 +148,7 @@
       <h3>Results</h3>
       <div id="resultsGrid" class="results-grid">
         <div class="result-item">
-          <span class="result-label">RRR</span>
+          <span class="result-label">Return Rate</span>
           <span id="rrrResult" class="result-value">—</span>
         </div>
         <div class="result-item">
@@ -182,7 +182,7 @@
       </div>
 
       <div id="rrrBreakdown" class="rrr-breakdown">
-        <h4>RRR Breakdown</h4>
+        <h4>Return Rate Breakdown</h4>
         <div id="breakdownLines"></div>
       </div>
 
@@ -226,12 +226,12 @@
 <section id="reference" class="section">
   <div class="section-header">
     <h2>Reference Tables</h2>
-    <p>Cities, RRR values, focus costs, and ratios at a glance.</p>
+    <p>Cities, return rate values, focus costs, and ratios at a glance.</p>
   </div>
 
   <div class="ref-tabs">
     <button class="ref-tab active" data-tab="cities">City Bonuses</button>
-    <button class="ref-tab" data-tab="rrr">RRR Table</button>
+    <button class="ref-tab" data-tab="rrr">Return Rate Table</button>
     <button class="ref-tab" data-tab="focus">Focus Costs</button>
     <button class="ref-tab" data-tab="ratios">Ratios</button>
   </div>
@@ -256,7 +256,7 @@
   <div class="ref-panel" id="panel-rrr">
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Scenario</th><th>Bonus</th><th>RRR</th></tr></thead>
+        <thead><tr><th>Scenario</th><th>Bonus</th><th>Return Rate</th></tr></thead>
         <tbody>
           <tr><td>Non-bonus city, no focus</td><td>18%</td><td>15.3%</td></tr>
           <tr><td>Non-bonus city, with focus</td><td>77%</td><td>43.5%</td></tr>
