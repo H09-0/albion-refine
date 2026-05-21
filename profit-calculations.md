@@ -14,48 +14,46 @@ Net Profit = Sell Revenue - Material Cost - Station Fees + Journal Profit
 
 ## Accounting for RRR
 
-The effective material cost changes based on RRR:
+The effective material cost changes based on RRR. The actual raw-to-refined ratio varies by tier (e.g., T4 is 3 raw → 2 refined).
 
 ```
 Effective Material Cost = Raw Cost × (1 - RRR)
-Effective Output per Batch = Base Output × (1 + ProductionBonus/100)
 ```
 
-### Example Calculation
+### Example: T4 Wood → Planks in Fort Sterling
 
-Refining T4 Wood in Fort Sterling with Focus:
+Refining ratio: 3 Timber → 2 Planks. With RRR, some Timber is returned.
 
 | Variable | Value |
 |----------|-------|
-| Raw T4 Wood cost per unit | 50 silver |
+| Raw T4 Timber cost per unit | 50 silver |
 | T4 Planks sell price per unit | 120 silver |
 | RRR with Focus in FS | 53.9% |
-| Station fee | 15% |
-| Batch size | 100 wood |
+| Batch | 300 Timber → 200 Planks |
 
-**Per 100 wood:**
-- Material cost: 100 × 50 = 5,000 silver
-- Materials returned (RRR): ~54 wood
-- Net materials consumed: 100 - 54 = 46 wood
-- Planks produced: 100
-- Sell revenue: 100 × 120 = 12,000 silver
-- Station fee (15% of profit): varies
-- **Gross profit**: 12,000 - (46 × 50) = 12,000 - 2,300 = 9,700 silver
+**Per 300 Timber:**
+- Material cost: 300 × 50 = 15,000 silver
+- Materials returned (RRR 53.9%): ~162 Timber
+- Net consumed: 300 - 162 = 138 Timber
+- Planks produced: 200
+- Sell revenue: 200 × 120 = 24,000 silver
+- **Gross profit**: 24,000 - (138 × 50) = 24,000 - 6,900 = **17,100 silver**
 
 ## Profit with Focus
 
-Compare Focus ON vs Focus OFF:
+Compare Focus ON vs Focus OFF (300 Timber batch):
 
 | Metric | No Focus | With Focus |
 |--------|----------|------------|
 | RRR | 36.7% | 53.9% |
-| Net mats consumed (per 100) | ~63 | ~46 |
-| Effective cost | 3,150 | 2,300 |
-| Sell revenue | 12,000 | 12,000 |
-| Gross profit | 8,850 | 9,700 |
-| Extra profit from Focus | — | +850 |
-| Focus cost | 0 | 54 |
-| **Silver per Focus** | — | **15.7** |
+| Net mats consumed | ~190 Timber | ~138 Timber |
+| Effective cost | 9,500 | 6,900 |
+| Sell revenue | 24,000 | 24,000 |
+| Gross profit | 14,500 | 17,100 |
+| Extra profit from Focus | — | +2,600 |
+| Focus cost (per 3 Timber) | 0 | ~54 |
+| Total Focus for batch | 0 | ~5,400 |
+| **Silver per Focus** | — | **~0.48** |
 
 ## Market Strategy
 
