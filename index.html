@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Albion Refine — Refining Calculator & Guide for Albion Online</title>
+<meta name="description" content="Albion Online refining profit calculator with RRR, focus, city bonuses, and live market prices. Plus guides and reference tables for all 5 refining disciplines.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚒️</text></svg>">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-brand">⚒️ Albion Refine</a>
+    <div class="nav-links">
+      <a href="#calculator" class="nav-link">Calculator</a>
+      <a href="#guides" class="nav-link">Guides</a>
+      <a href="#reference" class="nav-link">Reference</a>
+      <a href="#about" class="nav-link">About</a>
+    </div>
+    <button id="themeToggle" class="theme-btn" aria-label="Toggle theme">🌙</button>
+    <button class="hamburger" aria-label="Menu">☰</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-content">
+    <h1>Refining in Albion Online</h1>
+    <p>Calculate profits, optimize focus usage, and master the refining economy with accurate RRR mechanics and live market prices.</p>
+    <div class="hero-cta">
+      <a href="#calculator" class="btn btn-primary">Try the Calculator</a>
+      <a href="#guides" class="btn btn-secondary">Read the Guides</a>
+    </div>
+  </div>
+</section>
+
+<section id="calculator" class="section">
+  <div class="section-header">
+    <h2>Refining Profit Calculator</h2>
+    <p>Select your resource, location, and prices to calculate profit with accurate RRR.</p>
+  </div>
+  <div class="calc-layout">
+    <div class="calc-inputs card">
+      <h3>Settings</h3>
+
+      <div class="form-group">
+        <label for="resource">Resource</label>
+        <select id="resource">
+          <option value="wood">Wood → Planks</option>
+          <option value="ore">Ore → Metal Bars</option>
+          <option value="fiber">Fiber → Cloth</option>
+          <option value="hide">Hide → Leather</option>
+          <option value="stone">Stone → Stone Blocks</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="tier">Tier</label>
+          <select id="tier">
+            <option value="4">T4</option>
+            <option value="5">T5</option>
+            <option value="6">T6</option>
+            <option value="7">T7</option>
+            <option value="8">T8</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="enchant">Enchantment</label>
+          <select id="enchant">
+            <option value="0">.0 Common</option>
+            <option value="1">.1 Uncommon</option>
+            <option value="2">.2 Rare</option>
+            <option value="3">.3 Exceptional</option>
+            <option value="4">.4 Pristine</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="city">City</label>
+        <select id="city">
+          <option value="FortSterling">Fort Sterling</option>
+          <option value="Thetford">Thetford</option>
+          <option value="Lymhurst">Lymhurst</option>
+          <option value="Martlock">Martlock</option>
+          <option value="Bridgewatch">Bridgewatch</option>
+          <option value="Caerleon">Caerleon</option>
+          <option value="Brecilien">Brecilien</option>
+        </select>
+        <span id="bonusIndicator" class="badge badge-bonus">+40% Bonus City</span>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="focusToggle">
+            <input type="checkbox" id="focusToggle" checked>
+            Use Focus
+          </label>
+        </div>
+        <div class="form-group">
+          <label for="dailyBonus">Daily Bonus</label>
+          <select id="dailyBonus">
+            <option value="0">None</option>
+            <option value="10">+10%</option>
+            <option value="20">+20%</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="stationFee">Station Fee (%)</label>
+        <input type="number" id="stationFee" value="15" min="0" max="100" step="0.5">
+      </div>
+
+      <div class="form-group">
+        <label for="specLevel">Spec Level (Focus Cost Reduction)</label>
+        <select id="specLevel">
+          <option value="0">0% (no spec)</option>
+          <option value="10000">50% (10k efficiency)</option>
+          <option value="20000">75% (20k efficiency)</option>
+          <option value="30000">87.5% (30k efficiency)</option>
+          <option value="40000">93.75% (40k max)</option>
+        </select>
+      </div>
+
+      <details>
+        <summary>Market Prices</summary>
+        <div class="form-group">
+          <label for="rawPrice">Raw Material Price (per unit)</label>
+          <div class="input-with-btn">
+            <input type="number" id="rawPrice" placeholder="e.g. 50" step="1">
+            <button id="fetchRawPrice" class="btn btn-sm">Fetch</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="refinedPrice">Refined Material Price (per unit)</label>
+          <div class="input-with-btn">
+            <input type="number" id="refinedPrice" placeholder="e.g. 120" step="1">
+            <button id="fetchRefinedPrice" class="btn btn-sm">Fetch</button>
+          </div>
+        </div>
+        <p class="help-text">Prices are per individual unit. If you leave these empty, the calculator shows RRR only.</p>
+      </details>
+    </div>
+
+    <div class="calc-results card">
+      <h3>Results</h3>
+      <div id="resultsGrid" class="results-grid">
+        <div class="result-item">
+          <span class="result-label">RRR</span>
+          <span id="rrrResult" class="result-value">—</span>
+        </div>
+        <div class="result-item">
+          <span class="result-label">Production Bonus</span>
+          <span id="bonusResult" class="result-value">—</span>
+        </div>
+        <div class="result-item">
+          <span class="result-label">Material Cost (per craft)</span>
+          <span id="costResult" class="result-value">—</span>
+        </div>
+        <div class="result-item">
+          <span class="result-label">Sell Revenue (per craft)</span>
+          <span id="revenueResult" class="result-value">—</span>
+        </div>
+        <div class="result-item">
+          <span class="result-label">Net Profit (per craft)</span>
+          <span id="profitResult" class="result-value">—</span>
+        </div>
+        <div class="result-item">
+          <span class="result-label">Focus Cost</span>
+          <span id="focusCostResult" class="result-value">—</span>
+        </div>
+        <div class="result-item">
+          <span class="result-label">Silver / Focus</span>
+          <span id="spfResult" class="result-value">—</span>
+        </div>
+        <div class="result-item">
+          <span class="result-label">Profit / 10k Focus</span>
+          <span id="dailyProfitResult" class="result-value">—</span>
+        </div>
+      </div>
+
+      <div id="rrrBreakdown" class="rrr-breakdown">
+        <h4>RRR Breakdown</h4>
+        <div id="breakdownLines"></div>
+      </div>
+
+      <div id="optimalAdvice" class="optimal-advice">
+        <h4>Recommendation</h4>
+        <p id="adviceText">Enter prices to get a recommendation.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="guides" class="section">
+  <div class="section-header">
+    <h2>Guides & Strategy</h2>
+    <p>Learn the mechanics and optimize your refining.</p>
+  </div>
+  <div class="guide-grid">
+    <article class="card guide-card">
+      <h3>Getting Started</h3>
+      <p>Refining converts raw gathered resources into refined materials used for crafting. There are 5 disciplines: Wood→Planks, Ore→Bars, Fiber→Cloth, Hide→Leather, Stone→Blocks.</p>
+      <p>Each royal city gives a +40% refining bonus to one specific resource type. Always refine in the correct bonus city for max returns.</p>
+    </article>
+    <article class="card guide-card">
+      <h3>The City Bonus Paradox</h3>
+      <p>Because everyone refines in the bonus city, raw materials are <strong>more expensive</strong> and refined materials are <strong>cheaper</strong> there due to competition.</p>
+      <p><strong>Better strategy:</strong> Buy raw in a non-bonus city, transport to the bonus city to refine, then sell the refined materials elsewhere (or Black Market).</p>
+    </article>
+    <article class="card guide-card">
+      <h3>Focus Optimization</h3>
+      <p>Focus adds +59% production bonus. With max spec (40k efficiency), focus cost drops to 6.25% of base.</p>
+      <p>Players report ~145 SPF for T6.3 refining at high spec = ~1.45M silver/day from 10k Focus.</p>
+    </article>
+    <article class="card guide-card">
+      <h3>Spec Leveling</h3>
+      <p>Start with T4, work up to T8. Each 10k focus cost efficiency halves your focus cost. Max all refining nodes for 40k efficiency.</p>
+      <p>Higher tiers consume more raw per refined unit (T4: 3→2, T8: 5→2), making RRR increasingly important.</p>
+    </article>
+  </div>
+</section>
+
+<section id="reference" class="section">
+  <div class="section-header">
+    <h2>Reference Tables</h2>
+    <p>Cities, RRR values, focus costs, and ratios at a glance.</p>
+  </div>
+
+  <div class="ref-tabs">
+    <button class="ref-tab active" data-tab="cities">City Bonuses</button>
+    <button class="ref-tab" data-tab="rrr">RRR Table</button>
+    <button class="ref-tab" data-tab="focus">Focus Costs</button>
+    <button class="ref-tab" data-tab="ratios">Ratios</button>
+  </div>
+
+  <div class="ref-panel active" id="panel-cities">
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>City</th><th>Refining Bonus</th><th>Resource</th></tr></thead>
+        <tbody>
+          <tr><td>Fort Sterling</td><td>+40%</td><td>Wood → Planks</td></tr>
+          <tr><td>Thetford</td><td>+40%</td><td>Ore → Metal Bars</td></tr>
+          <tr><td>Lymhurst</td><td>+40%</td><td>Fiber → Cloth</td></tr>
+          <tr><td>Martlock</td><td>+40%</td><td>Hide → Leather</td></tr>
+          <tr><td>Bridgewatch</td><td>+40%</td><td>Stone → Stone Blocks</td></tr>
+          <tr><td>Caerleon</td><td>—</td><td>No refining bonus</td></tr>
+          <tr><td>Brecilien</td><td>—</td><td>No refining bonus</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="ref-panel" id="panel-rrr">
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Scenario</th><th>Bonus</th><th>RRR</th></tr></thead>
+        <tbody>
+          <tr><td>Non-bonus city, no focus</td><td>18%</td><td>15.3%</td></tr>
+          <tr><td>Non-bonus city, with focus</td><td>77%</td><td>43.5%</td></tr>
+          <tr><td>Bonus city, no focus</td><td>58%</td><td>36.7%</td></tr>
+          <tr><td>Bonus city, +10% daily</td><td>68%</td><td>40.5%</td></tr>
+          <tr><td>Bonus city, +20% daily</td><td>78%</td><td>43.8%</td></tr>
+          <tr><td>Bonus city, focus</td><td>117%</td><td>53.9%</td></tr>
+          <tr><td>Bonus, focus, +10%</td><td>127%</td><td>55.9%</td></tr>
+          <tr><td>Bonus, focus, +20%</td><td>137%</td><td>57.8%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="ref-panel" id="panel-focus">
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tier</th><th>.0</th><th>.1</th><th>.2</th><th>.3</th></tr></thead>
+        <tbody>
+          <tr><td>T4</td><td>54</td><td>94</td><td>164</td><td>287</td></tr>
+          <tr><td>T5</td><td>94</td><td>164</td><td>287</td><td>503</td></tr>
+          <tr><td>T6</td><td>164</td><td>287</td><td>503</td><td>880</td></tr>
+          <tr><td>T7</td><td>287</td><td>503</td><td>880</td><td>1,539</td></tr>
+          <tr><td>T8</td><td>503</td><td>880</td><td>1,539</td><td>2,694</td></tr>
+        </tbody>
+      </table>
+      <p class="help-text">Base focus cost at 0 spec. Max spec (40k) reduces to 6.25%.</p>
+    </div>
+  </div>
+
+  <div class="ref-panel" id="panel-ratios">
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tier</th><th>Raw → Refined</th><th>Ratio</th></tr></thead>
+        <tbody>
+          <tr><td>T2</td><td>2 → 3</td><td>0.67:1</td></tr>
+          <tr><td>T3</td><td>2 → 2</td><td>1:1</td></tr>
+          <tr><td>T4</td><td>3 → 2</td><td>1.5:1</td></tr>
+          <tr><td>T5</td><td>3 → 2</td><td>1.5:1</td></tr>
+          <tr><td>T6</td><td>4 → 2</td><td>2:1</td></tr>
+          <tr><td>T7</td><td>4 → 2</td><td>2:1</td></tr>
+          <tr><td>T8</td><td>5 → 2</td><td>2.5:1</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="about" class="section">
+  <div class="section-header">
+    <h2>About</h2>
+  </div>
+  <div class="card">
+    <p>Albion Refine is a fan-made tool for <a href="https://albiononline.com" target="_blank">Albion Online</a>. All game assets and data belong to Sandbox Interactive GmbH.</p>
+    <p>Market prices are fetched from the <a href="https://www.albion-online-data.com/" target="_blank">Albion Online Data Project</a> (AODP).</p>
+    <p>Source code and full documentation available on <a href="https://github.com/H09-0/albion-refine" target="_blank">GitHub</a>.</p>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>Not affiliated with Sandbox Interactive GmbH. Albion Online is a registered trademark.</p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
