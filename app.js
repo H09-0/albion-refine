@@ -62,15 +62,22 @@ function calc() {
   const raw = parseFloat(rawPrice.value);
   const ref = parseFloat(refinedPrice.value);
 
-  // Production bonus
-  let bonus = 18; // base
-  if (isBonus) bonus += 40;
-  if (useFocus) bonus += 59;
-  bonus += daily;
+  // Base production bonus (location only, no focus)
+  let baseBonus = 18;
+  if (isBonus) baseBonus += 40;
+  baseBonus += daily;
 
-  // RRR
-  const rrr = bonus / (100 + bonus);
-  const rrrPct = (rrr * 100).toFixed(1);
+  // Full production bonus (with focus)
+  let fullBonus = baseBonus;
+  if (useFocus) fullBonus += 59;
+
+  // Return rates
+  const baseRrr = baseBonus / (100 + baseBonus);
+  const baseRrrPct = (baseRrr * 100).toFixed(1);
+  const fullRrr = fullBonus / (100 + fullBonus);
+  const fullRrrPct = (fullRrr * 100).toFixed(1);
+
+  const rrr = fullRrr; // Use full for profit calculations
 
   // Ratio
   const ratio = TIER_RATIOS[tier] || [3, 2];
@@ -96,8 +103,9 @@ function calc() {
   const dailyProfit = (spf !== null && spf > 0) ? spf * 10000 : null;
 
   // Display
-  $('rrrResult').textContent = rrrPct + '%';
-  $('bonusResult').textContent = '+' + bonus + '%';
+  $('baseRrrResult').textContent = baseRrrPct + '%';
+  $('focusRrrResult').textContent = useFocus ? fullRrrPct + '%' : '— (focus off)';
+  $('bonusResult').textContent = '+' + fullBonus + '%';
   $('costResult').textContent = materialCost !== null ? materialCost.toFixed(0) + ' s' : '—';
   $('revenueResult').textContent = revenue !== null ? revenue.toFixed(0) + ' s' : '—';
 
@@ -118,10 +126,11 @@ function calc() {
   const lines = [
     { label: 'Base production bonus', value: '+18%' },
     ...(isBonus ? [{ label: 'City specialization', value: '+40%' }] : []),
-    ...(useFocus ? [{ label: 'Focus bonus', value: '+59%' }] : []),
     ...(daily > 0 ? [{ label: 'Daily bonus', value: '+' + daily + '%' }] : []),
-    { label: 'Total production bonus', value: '+' + bonus + '%', bold: true },
-    { label: 'Return rate', value: rrrPct + '%', bold: true },
+    { label: 'Location bonus total', value: '+' + baseBonus + '%', bold: true },
+    { label: 'Return rate (location)', value: baseRrrPct + '%' },
+    ...(useFocus ? [{ label: 'Focus adds', value: '+59%' }] : []),
+    ...(useFocus ? [{ label: 'Return rate (with focus)', value: fullRrrPct + '%', bold: true }] : []),
     { label: 'Raw per craft', value: rawPerCraft + ' → ' + netRaw.toFixed(1) + ' (after return)' },
     { label: 'Refined per craft', value: refPerCraft + ' units' },
   ];
@@ -148,10 +157,10 @@ function calc() {
 }
 
 function calcProfitNoFocus(res, tier, ench, city, daily, fee, raw, ref) {
-  let bonus = 18;
-  if (BONUS_CITIES[res] === city) bonus += 40;
-  bonus += daily;
-  const rrr = bonus / (100 + bonus);
+  let pb = 18;
+  if (BONUS_CITIES[res] === city) pb += 40;
+  pb += daily;
+  const rrr = pb / (100 + pb);
   const ratio = TIER_RATIOS[tier] || [3, 2];
   const netRaw = ratio[0] * (1 - rrr);
   if (!raw || !ref) return 0;
