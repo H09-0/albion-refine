@@ -55,17 +55,45 @@ Compare Focus ON vs Focus OFF (300 Timber batch):
 | Total Focus for batch | 0 | ~5,400 |
 | **Silver per Focus** | — | **~0.48** |
 
+## Community Profit Data
+
+From player reports on Reddit (2026), real refining profits at high spec:
+
+| Resource | Location | SPF | Daily Profit (10k Focus) |
+|----------|----------|-----|-------------------------|
+| T6.3 Ore Bars | Thetford (bonus) | ~145 | ~1,450,000 silver |
+| T8.0 Refining | Bonus city with spec | varies | 1M-2M+ silver |
+
+> Note: These numbers require high specialization (low focus cost) and optimal market conditions. Your mileage will vary.
+
+## The City Bonus Paradox
+
+A critical insight from the community:
+- The city bonus (+40%) attracts many refiners
+- This drives **up** raw material prices in the bonus city (high demand)
+- This drives **down** refined material prices in the bonus city (high supply)
+- **Net result**: Refining in the bonus city with materials bought there is often LESS profitable than buying elsewhere
+
+### Better Strategy
+
+1. **Buy raw** in a non-bonus city where demand is lower (e.g., buy ore in Martlock)
+2. **Transport** to the bonus city (e.g., Thetford)
+3. **Refine** with max RRR
+4. **Sell refined** in a different city or Black Market where prices are better
+
 ## Market Strategy
 
 ### Buy Orders
 - Place buy orders for raw materials to get lower prices
 - Takes time to fill but increases margin significantly
+- **Best places**: Non-bonus cities for that resource (less competition)
 
 ### Sell Orders
 - Sell refined materials with sell orders (not instant) for higher prices
 - Factor in the market tax (~4% without Premium, ~2% with Premium)
+- **Best places**: Cities where the resource isn't refined locally, or Black Market
 
 ### Transport Arbitrage
-- Raw materials are often cheapest in the city where they're gathered
-- Refined materials may sell for more in different cities
-- Example: Buy ore in Thetford, refine, sell planks in Fort Sterling
+- Raw materials are cheapest outside the bonus city
+- Refined materials sell best where they're not produced locally
+- Example: Buy ore in Martlock, refine in Thetford, sell bars in Fort Sterling
